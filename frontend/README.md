@@ -23,4 +23,8 @@ Register domain name in Route 53. Create hosted zone, create record names (only 
 
 ============
 
+TODO: 
+    - Configure form submit button for backend
+    - CI/CD
+    - CV Download feature
 Note to future: be aware of invalidations in CloudFront while developing CI/CD
