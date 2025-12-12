@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -29,15 +30,9 @@ export default function Home() {
           >
             My projects
           </a>
-
-          <a
-            href="/contact"
-            className="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 
+          <Link href="/contact" className="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 
                        text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 
-                       transition"
-          >
-            Contact me!
-          </a>
+                       transition">Contact Me!</Link>
         </div>
       </div>
 
