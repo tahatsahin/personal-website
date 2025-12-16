@@ -30,6 +30,11 @@ var (
 		// CcAddresses: []string{"cc@example.com"},
 		// BccAddresses: []string{"cc@example.com"},
 	}
+	headers = map[string]string{
+		"Access-Control-Allow-Origin":  "https://tahatsahin.com",
+		"Access-Control-Allow-Headers": "Content-Type",
+		"Access-Control-Allow-Methods": "POST,OPTIONS",
+	}
 )
 
 func init() {
@@ -80,7 +85,11 @@ func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (ev
 	// parse mail from request
 	if err := json.Unmarshal([]byte(event.Body), &mail); err != nil {
 		log.Printf("failed to unmarshal event: %v", err)
-		return events.APIGatewayProxyResponse{StatusCode: 400, Body: "Invalid request body"}, nil
+		return events.APIGatewayProxyResponse{
+			StatusCode: 400,
+			Headers:    headers,
+			Body:       "Invalid request body",
+		}, nil
 	}
 
 	// prepare email input
@@ -90,11 +99,19 @@ func handleRequest(ctx context.Context, event events.APIGatewayProxyRequest) (ev
 	_, err := sesClient.SendEmail(ctx, emailInput)
 	if err != nil {
 		log.Printf("failed to send email: %v", err)
-		return events.APIGatewayProxyResponse{StatusCode: 500, Body: "Failed to send email"}, nil
+		return events.APIGatewayProxyResponse{
+			StatusCode: 500,
+			Headers:    headers,
+			Body:       "Failed to send email",
+		}, nil
 	}
 
 	log.Printf("email sent successfully to %s", DestinationEmail)
-	return events.APIGatewayProxyResponse{StatusCode: 200, Body: "Email sent successfully"}, nil
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Headers:    headers,
+		Body:       "Email sent successfully",
+	}, nil
 }
 
 func main() {
