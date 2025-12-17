@@ -7,6 +7,7 @@ tahatsahin.com is my personal website, hosted on AWS.
 Used technologies:
 
 Frontend: ExpressJs, AWS CloudFront, AWS S3 Bucket
+
 Backend: Golang, AWS API Gateway, AWS Lambda, AWS Simple Email Service (SES)
 Other: 
   - AWS Route53 for DNS
