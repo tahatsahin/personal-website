@@ -5,10 +5,10 @@ on:
     branches: [ "master" ]
     paths:
       - "frontend/**"
-    pull_request:
-      paths:
-        - "frontend/**"
-    workflow_dispatch:
+  pull_request:
+    paths:
+      - "frontend/**"
+  workflow_dispatch:
 
 
 concurrency:
@@ -59,7 +59,7 @@ jobs:
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_FRONTEND }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Sync to S3 Bucket
