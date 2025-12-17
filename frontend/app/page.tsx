@@ -19,7 +19,6 @@ export default function Home() {
           <br></br>
           <br></br>
           I am currently improving my DevOps Skills, working on Linux Administration, Github Actions and some cloud technologies like Terraform, Ansible, AWS.
-          <br></br>
         </p>
         {/* Buttons */}
         <div className="flex flex-wrap gap-4">
