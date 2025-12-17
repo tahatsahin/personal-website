@@ -3,6 +3,9 @@
 # ignore bootstrap for golang build
 bootstrap
 
+# ignore TODO
+TODO
+
 # dependencies
 */node_modules
 */.pnp
