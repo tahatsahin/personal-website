@@ -41,44 +41,44 @@ jobs:
           name: frontend-out
           path: frontend/out
 
-deploy:
-  if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-  needs: ci
-  runs-on: ubuntu-latest
-  environment: production
-  permissions:
-    id-token: write
-    contents: read
-  steps:
-    - uses: actions/checkout@v4
-    - uses: actions/download-artifact@v4
-      with:
-        name: frontend-out
-        path: out
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: frontend-out
+          path: out
 
-    - name: Configure AWS Credentials (OIDC)
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-        aws-region: ${{ secrets.AWS_REGION }}
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Sync to S3 Bucket
-      run: |
-        aws s3 sync out s3://${{ secrets.FRONTEND_BUCKET }} \
-          --delete \
-          --cache-control "public,max-age=31536000,immutable" \
-          --exclude "*.html"
+      - name: Sync to S3 Bucket
+        run: |
+          aws s3 sync out s3://${{ secrets.FRONTEND_BUCKET }} \
+            --delete \
+            --cache-control "public,max-age=31536000,immutable" \
+            --exclude "*.html"
 
-    - name: Upload html files with no cache
-      run: |
-        aws s3 sync out s3://${{ secrets.FRONTEND_BUCKET }} \
-          --delete \
-          --exclude "*" \
-          --include "*.html" \
-          --cache-control "no-cache"
+      - name: Upload html files with no cache
+        run: |
+          aws s3 sync out s3://${{ secrets.FRONTEND_BUCKET }} \
+            --delete \
+            --exclude "*" \
+            --include "*.html" \
+            --cache-control "no-cache"
 
-    - name: Invalidate CloudFront
-      run: |
-        aws cloudfront create-invalidation \
-          --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} \
-          --paths "/*"
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} \
+            --paths "/*"
