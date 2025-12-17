@@ -56,7 +56,7 @@ export default function ContactPage() {
       <h1 className="text-3xl font-bold mb-4">Contact</h1>
 
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-8">
-        Fill out the form below to get in touch with me. I'll do my best to respond as soon as possible.
+        Fill out the form below to get in touch with me. I will do my best to respond as soon as possible.
       </p>
 
       <div className="grid gap-10 md:grid-cols-[1.1fr,1.6fr] items-start">
@@ -66,7 +66,7 @@ export default function ContactPage() {
                           bg-white dark:bg-gray-900 p-6 shadow-sm">
             <h2 className="text-xl font-semibold mb-2 text-center">Contact me!</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-              I'd love to hear from you! Whether you have a question, a project idea, or just want to say hi, feel free to reach out.
+              I would love to hear from you! Whether you have a question, a project idea, or just want to say hi, feel free to reach out.
             </p>
           </div>
 
