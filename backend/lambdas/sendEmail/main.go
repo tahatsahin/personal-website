@@ -24,7 +24,7 @@ func init() {
 	region := os.Getenv("AWS_REGION")
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
 	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
+		log.Fatalf("unable to load SDK config, try adding context %v", err)
 	}
 	sesClient = sesv2.NewFromConfig(cfg)
 }
