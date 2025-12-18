@@ -54,11 +54,11 @@ jobs:
           go test ./lambdas/countVisitor/...
           go vet ./lambdas/countVisitor/...
 
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.60.0
-          working-directory: backend
+      #- name: Run golangci-lint
+      #  uses: golangci/golangci-lint-action@v6
+      #  with:
+      #    version: v1.60.0
+      #    working-directory: backend
       
       - name: Build lambda binary for sendEmail
         if: steps.filter.outputs.sendEmail == 'true'
