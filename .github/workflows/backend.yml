@@ -4,10 +4,14 @@ on:
   push:
     branches: [ "master" ]
     paths:
-      - "backend/**"
+      - "backend/lambdas/**"
+      - "backend/go.work"
+      - "backend/Makefile"
   pull_request:
      paths:
-       - "backend/**"
+      - "backend/lambdas/**"
+      - "backend/go.work"
+      - "backend/Makefile"
   workflow_dispatch:
 
   
@@ -22,30 +26,60 @@ jobs:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: actions/setup-go@v5
         with:
           go-version: "1.22"
           cache: true
 
-      - run: go test ./...
-      - run: go vet ./...
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            sendEmail:
+              - 'lambdas/sendEmail/**'
+            countVisitor:
+              - 'lambdas/countVisitor/**'
 
-      - uses: golangci/golangci-lint-action@v6
+      - name: Test affected packages
+        if: steps.filter.outputs.sendEmail == 'true'
+        run: |
+          go test ./lambdas/sendEmail/...
+          go vet ./lambdas/sendEmail/...
+      
+      - name: Test affected packages
+        if: steps.filter.outputs.countVisitor == 'true'
+        run: |
+          go test ./lambdas/countVisitor/...
+          go vet ./lambdas/countVisitor/...
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v6
         with:
           version: v1.60.0
           working-directory: backend
-
-      - name: Build lambda binary
+      
+      - name: Build lambda binary for sendEmail
+        if: steps.filter.outputs.sendEmail == 'true'
         run: |
-           GOOS=linux GOARCH=amd64 go build -o bootstrap ./cmd/lambda
+            GOOS=linux GOARCH=arm64 go build -o bootstrap ./lambdas/sendEmail
+            zip function.zip bootstrap
+        env:
+          LAMBDA_FUNCTION_NAME: sendEmail
+
+      - name: Build lambda binary for countVisitor
+        run: |
+           GOOS=linux GOARCH=arm64 go build -o bootstrap ./lambdas/countVisitor
            zip function.zip bootstrap
+        env:
+          LAMBDA_FUNCTION_NAME: countVisitor
 
       - uses: actions/upload-artifact@v4
         with:
           name: lambda-zip
           path: backend/function.zip
+  
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: ci
@@ -68,6 +102,5 @@ jobs:
       - name: Deploy to Lambda
         run: |
           aws lambda update-function-code \
-            --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
+            --function-name "$LAMBDA_FUNCTION_NAME" \
             --zip-file fileb://function.zip
-
