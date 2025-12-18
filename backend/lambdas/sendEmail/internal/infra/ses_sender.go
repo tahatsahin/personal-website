@@ -1,10 +1,11 @@
-package internal
+package infra
 
 import (
 	"context"
 
 	"github.com/aws/aws-sdk-go-v2/service/sesv2"
 	"github.com/aws/aws-sdk-go-v2/service/sesv2/types"
+	"github.com/tahatsahin/personal-website/backend/lambdas/sendEmail/internal/app"
 )
 
 type SESSender struct {
@@ -15,7 +16,7 @@ type SESSender struct {
 	CharSet     string
 }
 
-func (s SESSender) SendEmail(ctx context.Context, req ContactRequest) error {
+func (s SESSender) SendEmail(ctx context.Context, req app.ContactRequest) error {
 	subject := s.Subject
 	if subject == "" {
 		subject = "DO NOT REPLY - Email from tahatsahin.com contact form"

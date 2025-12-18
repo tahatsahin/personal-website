@@ -1,6 +1,8 @@
 module github.com/tahatsahin/personal-website/backend/lambdas/sendEmail
 
-go 1.24.11
+go 1.22
+
+toolchain go1.24.11
 
 require (
 	github.com/aws/aws-lambda-go v1.51.1

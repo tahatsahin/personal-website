@@ -8,7 +8,8 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sesv2"
-	"github.com/tahatsahin/personal-website/backend/lambdas/sendEmail/internal"
+	"github.com/tahatsahin/personal-website/backend/lambdas/sendEmail/internal/app"
+	"github.com/tahatsahin/personal-website/backend/lambdas/sendEmail/internal/infra"
 )
 
 var (
@@ -29,8 +30,8 @@ func init() {
 }
 
 func main() {
-	lambda.Start(internal.Handler{
-		Sender: internal.SESSender{
+	lambda.Start(app.Handler{
+		Sender: infra.SESSender{
 			Client:      sesClient,
 			FromAddress: SourceEmail,
 			ToAddress:   DestinationEmail,
