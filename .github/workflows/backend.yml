@@ -38,9 +38,9 @@ jobs:
         with:
           filters: |
             sendEmail:
-              - 'lambdas/sendEmail/**'
+              - 'backend/lambdas/sendEmail/**'
             countVisitor:
-              - 'lambdas/countVisitor/**'
+              - 'backend/lambdas/countVisitor/**'
 
       - name: Test affected packages
         if: steps.filter.outputs.sendEmail == 'true'
