@@ -19,7 +19,7 @@ var (
 	Subject          = "DO NOT REPLY - Email from tahatsahin.com contact form"
 	CharSet          = "UTF-8"
 )
-
+// dummy change to trigger workflow
 func init() {
 	region := os.Getenv("AWS_REGION")
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
