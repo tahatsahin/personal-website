@@ -42,18 +42,10 @@ jobs:
             countVisitor:
               - 'backend/lambdas/countVisitor/**'
 
-      - name: Test affected packages
-        if: steps.filter.outputs.sendEmail == 'true'
+      - name: Test all services
         run: |
-          go test ./lambdas/sendEmail/...
-          go vet ./lambdas/sendEmail/...
-      
-      - name: Test affected packages
-        if: steps.filter.outputs.countVisitor == 'true'
-        run: |
-          go test ./lambdas/countVisitor/...
-          go vet ./lambdas/countVisitor/...
-
+          go test github.com/tahatsahin/personal-website/backend/...
+          go vet github.com/tahatsahin/personal-website/backend/...
       #- name: Run golangci-lint
       #  uses: golangci/golangci-lint-action@v6
       #  with:
@@ -69,6 +61,7 @@ jobs:
           LAMBDA_FUNCTION_NAME: sendEmail
 
       - name: Build lambda binary for countVisitor
+        if: steps.filter.outputs.countVisitor == 'true'
         run: |
            GOOS=linux GOARCH=arm64 go build -o bootstrap ./lambdas/countVisitor
            zip function.zip bootstrap
@@ -81,8 +74,8 @@ jobs:
           path: backend/function.zip
   
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment: production
     permissions: 
